@@ -22,7 +22,7 @@ str(activity)
 
 ## What is mean total number of steps taken per day?
 Sum total steps for each day ignoring NAs.  Create histogram of results.
-```{r}
+```{r total_steps_per_day_histogram}
 step_tot<-aggregate(activity$steps,by=list(date=activity$date),FUN=sum,na.rm=TRUE)
 hist(step_tot$x)
 ```
@@ -37,7 +37,7 @@ median(step_tot$x,na.rm=TRUE)
 
 ## What is the average daily activity pattern?
 Calculate mean steps for interval period across all days.
-```{r}
+```{r avg_daily_pattern}
 step_int<-aggregate(activity$steps,by=list(interval=activity$interval),FUN=mean,na.rm=TRUE)
 plot(step_int$interval,step_int$x,xlab="Interval",ylab="Mean Steps",type="l")
 ```
@@ -63,7 +63,7 @@ head(step_merge)
 ```
 
 Calculate total steps for each day, to create histogram
-```{r}
+```{r histogram2}
 step_new<-aggregate(step_merge$imp,by=list(date=activity$date),FUN=sum,na.rm=TRUE)
 hist(step_new$x,xlab="Mean steps per day")
 ```
@@ -97,7 +97,7 @@ head(step_type)
 ```
 
 Plot average steps per interval for weekdays vs Weekends.
-```{r}
+```{r weekend_weekday}
 library(ggplot2)
 qplot(interval,x,data=step_type,facets=type~.,ylab="Avg. Steps")+geom_line()
 ```

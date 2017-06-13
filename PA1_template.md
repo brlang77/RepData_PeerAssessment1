@@ -32,7 +32,7 @@ step_tot<-aggregate(activity$steps,by=list(date=activity$date),FUN=sum,na.rm=TRU
 hist(step_tot$x)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](PA1_template_files/figure-html/total_steps_per_day_histogram-1.png)<!-- -->
 Most days fall between 10,000 and 15,000 steps per day
 
 Calculate mean and median steps taken per day
@@ -62,7 +62,7 @@ step_int<-aggregate(activity$steps,by=list(interval=activity$interval),FUN=mean,
 plot(step_int$interval,step_int$x,xlab="Interval",ylab="Mean Steps",type="l")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](PA1_template_files/figure-html/avg_daily_pattern-1.png)<!-- -->
 It appears that the most active interval is around 800.  Confirm with calculating max.
 
 ```r
@@ -113,7 +113,7 @@ step_new<-aggregate(step_merge$imp,by=list(date=activity$date),FUN=sum,na.rm=TRU
 hist(step_new$x,xlab="Mean steps per day")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](PA1_template_files/figure-html/histogram2-1.png)<!-- -->
 
 Calculate mean and median imputed steps
 
@@ -194,5 +194,5 @@ library(ggplot2)
 qplot(interval,x,data=step_type,facets=type~.,ylab="Avg. Steps")+geom_line()
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](PA1_template_files/figure-html/weekend_weekday-1.png)<!-- -->
 
