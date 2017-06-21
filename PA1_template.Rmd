@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "Reproducible Research: Peer Assessment 1"
 output: 
@@ -102,3 +103,109 @@ library(ggplot2)
 qplot(interval,x,data=step_type,facets=type~.,ylab="Avg. Steps")+geom_line()
 ```
 
+=======
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
+
+
+## Loading and preprocessing the data
+Set working directory.  *Be sure* to edit if reproducing.
+
+```{r}
+setwd("~/Coursera/Reproducible Research/RepData_PeerAssessment1-master/RepData_PeerAssessment1-master")
+```
+
+Unzip file, read csv file, and check structure
+```{r}
+unzip("activity.zip")
+activity<-read.csv("activity.csv")
+str(activity)
+```
+
+## What is mean total number of steps taken per day?
+Sum total steps for each day ignoring NAs.  Create histogram of results.
+```{r total_steps_per_day_histogram, fig.keep="all", fig.show="asis"}
+step_tot<-aggregate(activity$steps,by=list(date=activity$date),FUN=sum,na.rm=TRUE)
+hist(step_tot$x)
+```
+Most days fall between 10,000 and 15,000 steps per day
+
+Calculate mean and median steps taken per day
+```{r}
+mean(step_tot$x,na.rm=TRUE)
+median(step_tot$x,na.rm=TRUE)
+```
+
+
+## What is the average daily activity pattern?
+Calculate mean steps for interval period across all days.
+```{r avg_daily_pattern, fig.keep="all", fig.show="asis"}
+step_int<-aggregate(activity$steps,by=list(interval=activity$interval),FUN=mean,na.rm=TRUE)
+plot(step_int$interval,step_int$x,xlab="Interval",ylab="Mean Steps",type="l")
+```
+It appears that the most active interval is around 800.  Confirm with calculating max.
+```{r}
+t<-max(step_int$x)
+step_int[step_int$x==t,]
+```
+Most active interval is 8:35 am
+
+## Imputing missing values
+How often is data missing (NA) in the dataset?
+```{r}
+sum(is.na(activity$steps))
+```
+
+Need strategy to impute missing step values.  Propose using the mean steps for the interval.
+Will use mean steps for interval and join to original data set.  They will calculate imputed steps if NA.
+```{r}
+step_merge<-merge(activity,step_int)
+step_merge$imp<-ifelse(is.na(step_merge$steps),step_merge$x,step_merge$steps)
+head(step_merge)
+```
+
+Calculate total steps for each day, to create histogram
+```{r histogram2, fig.keep="all", fig.show="asis"}
+step_new<-aggregate(step_merge$imp,by=list(date=activity$date),FUN=sum,na.rm=TRUE)
+hist(step_new$x,xlab="Mean steps per day")
+```
+
+Calculate mean and median imputed steps
+```{r}
+mean(step_new$x)
+median(step_new$x)
+```
+Both mean and median steps have increased due to this imputation logic
+
+
+## Are there differences in activity patterns between weekdays and weekends?
+Need to calculate weekdays after converting "date" to posix
+
+```{r}
+step_merge$days<-weekdays(strptime(step_merge$date,"%Y-%m-%d"))
+table(step_merge$ days)
+```
+Looks like we have more data for weekdays than weekends.  Calculate new field as factor to flag weekend vs weekday.
+
+```{r}
+step_merge$type<-as.factor(ifelse(step_merge$days %in% c("Saturday","Sunday"),"Weekend","Weekday"))
+table(step_merge$type)
+```
+
+Calculate total steps per day
+```{r}
+step_type<-aggregate(step_merge$imp,by=list(type=step_merge$type,interval=step_merge$interval),FUN=mean)
+head(step_type)
+```
+
+Plot average steps per interval for weekdays vs Weekends.
+```{r weekend_weekday, fig.keep="all", fig.show="asis"}
+library(ggplot2)
+qplot(interval,x,data=step_type,facets=type~.,ylab="Avg. Steps")+geom_line()
+```
+
+>>>>>>> f94452ce4927e88635b56602751e6fe4298e13fc
